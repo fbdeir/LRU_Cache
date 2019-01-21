@@ -1,0 +1,60 @@
+class LRU_CACHE:
+	capacity=0
+	index_counter=[]
+	counter=0;
+	cache={}
+	index_counter=[]
+
+	def __init__(self, capacity):
+		self.capacity=capacity
+	def appendme(self, key):
+		if len(self.index_counter)==0 or not self.index_counter[len(self.index_counter)-1]==key:
+			self.index_counter.append(key)
+	def PUT(self, key, word):
+		if key in self.cache:
+			if self.cache[key]==word:
+				if key in self.index_counter:
+					del self.index_counter[self.index_counter.index(key)]
+			else:
+				self.cache[key]=word
+				if key in self.index_counter:
+					del self.index_counter[self.index_counter.index(key)]
+			
+			self.appendme(key)
+	
+		else:
+			if self.counter==self.capacity:
+				print("here:"+ str(self.cache))
+				self.cache.pop(self.index_counter[0])
+				self.index_counter= self.index_counter[1:]
+			else: 	
+				self.counter+=1
+				
+			self.cache[key]=word
+			self.appendme(key)
+			
+	def GET(self, key):
+		if key in self.cache:
+			self.appendme(key)
+			print(self.cache.get(key))
+		else:
+			raise KeyError('Key not found')
+
+
+#tests
+c= LRU_CACHE(2)
+c.PUT("apple",3)
+print(c.cache)
+c.PUT("train", "car")
+print(c.cache)
+
+c.PUT("kleenex", "pen")
+print(c.cache)
+
+c.PUT("train", "book")
+print(c.cache)
+
+c.PUT("kleenex", "pen")
+#c.GET("kleenex")
+print(c.cache)
+print(c.index_counter)
